@@ -20,6 +20,7 @@ class NumberInput extends Component {
      * @see https://github.com/facebook/react/issues/1425
      */
     handleBlur = () => {
+        this.props.input.onBlur();
         this.props.input.onChange(parseFloat(this.props.input.value));
     }
 
@@ -27,8 +28,7 @@ class NumberInput extends Component {
         const { elStyle, input, label, meta: { touched, error }, options, source, step, resource } = this.props;
         return (
             <TextField
-                value={input.value}
-                onChange={input.onChange}
+                {...input}
                 onBlur={this.handleBlur}
                 type="number"
                 step={step}

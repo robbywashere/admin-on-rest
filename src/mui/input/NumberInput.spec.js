@@ -9,11 +9,18 @@ describe('<NumberInput />', () => {
     const defaultProps = {
         source: 'foo',
         meta: {},
-        input: {},
+        input: {
+            onBlur: sinon.spy(),
+            onChange: sinon.spy(),
+        },
     };
 
     it('should use a mui TextField', () => {
-        const wrapper = shallow(<NumberInput {...defaultProps} input={{ value: 'hello' }} />);
+        const props = { ...defaultProps };
+        props.input.value = 'hello';
+
+        const wrapper = shallow(<NumberInput {...props} />);
+
         const TextFieldElement = wrapper.find('TextField');
         assert.equal(TextFieldElement.length, 1);
         assert.equal(TextFieldElement.prop('value'), 'hello');
@@ -28,10 +35,22 @@ describe('<NumberInput />', () => {
     });
 
     it('should return a numeric value', () => {
-        const onChange = sinon.spy();
-        const wrapper = shallow(<NumberInput {...defaultProps} input={{ value: '2', onChange }} />);
+        const props = { ...defaultProps };
+        props.input.value = 2;
+
+        const wrapper = shallow(<NumberInput {...props} />);
         const TextFieldElement = wrapper.find('TextField').first();
         TextFieldElement.simulate('blur');
-        assert.deepEqual(onChange.args, [[2]]);
+        assert.deepEqual(props.input.onChange.args, [[2]]);
+    });
+
+    it('should call redux-form blur handler when blurred', () => {
+        const props = { ...defaultProps };
+        props.input.onBlur = sinon.spy();
+
+        const wrapper = shallow(<NumberInput {...defaultProps} />);
+
+        wrapper.find('TextField').simulate('blur');
+        assert.deepEqual(props.input.onBlur.args.length, 1);
     });
 });

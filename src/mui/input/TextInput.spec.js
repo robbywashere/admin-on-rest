@@ -26,6 +26,23 @@ describe('<TextInput />', () => {
         assert.equal(TextFieldElement.prop('type'), 'password');
     });
 
+    it('should keep all input properties', () => {
+        const wrapper = shallow((
+            <TextInput
+                {...defaultProps}
+                input={{
+                    onBlur: 'onBlur',
+                    onFocus: 'onFocus',
+                }}
+            />
+        ));
+
+        const TextFieldElement = wrapper.find('TextField');
+        assert.equal(TextFieldElement.length, 1);
+        assert.equal(TextFieldElement.prop('onBlur'), 'onBlur');
+        assert.equal(TextFieldElement.prop('onFocus'), 'onFocus');
+    });
+
     describe('error message', () => {
         it('should not be displayed if field is pristine', () => {
             const wrapper = shallow(<TextInput {...defaultProps} meta={{ touched: false }} />);
